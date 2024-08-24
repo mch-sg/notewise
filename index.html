@@ -57,11 +57,11 @@
             flex: 1;
             width: 100%;
             border: none;
-            padding: 10px;
+            padding: 15px;
             box-sizing: border-box;
             font-family: 'Inter', sans-serif;
             font-weight: 300;
-            background-color: #121212;
+            background-color: #161616;
             color: #e0e0e0;
             resize: none;
             font-size: 13px;
@@ -90,6 +90,8 @@
     <div class="title-bar">
         <button id="add-note"><i data-lucide="plus"></i></button>
         <div class="title-bar-buttons a">
+            <button id="change-color"><i data-lucide="palette"></i></button> <!-- New button for color change -->
+            <input type="color" id="color-picker" style="display: none;"> <!-- Hidden color picker -->
             <button style="color: #121212;" id="list-notes"><i data-lucide="more-horizontal"></i></button>
             <button style="color: #121212;" id="exit"><i data-lucide="x"></i></button>
         </div>
@@ -103,6 +105,27 @@
                 height: '18px',
                 stroke: '#e0e0e0'
             }
+        });
+        // Load saved color from localStorage
+        const savedColor = localStorage.getItem('titleBarColor') || '#43462f'; // Default color
+        const titleBar = document.querySelector('.title-bar');
+        titleBar.style.backgroundColor = savedColor; // Set initial color
+
+        // Function to update color in both index and list pages
+        function updateColor(color) {
+            titleBar.style.backgroundColor = color; // Set title bar color
+            localStorage.setItem('titleBarColor', color); // Save color to localStorage
+        }
+
+        // Add event listener for color change button
+        document.getElementById('change-color').addEventListener('click', function() {
+            document.getElementById('color-picker').click(); // Trigger color picker
+        });
+
+        // Add event listener for color picker
+        document.getElementById('color-picker').addEventListener('input', function(event) {
+            const selectedColor = event.target.value;
+            updateColor(selectedColor); // Update color
         });
     </script>
 </body>

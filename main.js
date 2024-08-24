@@ -7,14 +7,47 @@ const notesFilePath = path.join(app.getPath('userData'), 'notes.json');
 const lastOpenedNotePath = path.join(app.getPath('userData'), 'lastOpenedNote.json');
 const windowStatePath = path.join(app.getPath('userData'), 'windowState.json');
 
+// Function to save the position and size of the note
+function saveNotePosition(noteId, x, y, width, height) {
+    const filePath = path.join(app.getPath('userData'), 'notePositions.json');
+    let positions = {};
+
+    // Check if the file exists, if not, create it
+    if (fs.existsSync(filePath)) {
+        positions = JSON.parse(fs.readFileSync(filePath, 'utf-8') || '{}');
+    }
+
+    positions[noteId] = { x, y, width, height }; // Store position and size
+    fs.writeFileSync(filePath, JSON.stringify(positions));
+}
+
+// Function to get the saved position and size of the note
+function getNotePosition(noteId) {
+    const filePath = path.join(app.getPath('userData'), 'notePositions.json');
+
+    // Check if the file exists
+    if (fs.existsSync(filePath)) {
+        const positions = JSON.parse(fs.readFileSync(filePath, 'utf-8') || '{}');
+        return positions[noteId] || { x: 100, y: 100, width: 300, height: 300 }; // Default position and size
+    }
+
+    return { x: 100, y: 100, width: 300, height: 300 }; // Default position and size if file doesn't exist
+}
+
 function createWindow(note = null) {
     let windowState = getWindowState();
+    let position = { x: windowState.x, y: windowState.y, width: windowState.width, height: windowState.height };
+
+    if (note) {
+        const notePosition = getNotePosition(note.id); // Get saved position and size for the note
+        position = { x: notePosition.x, y: notePosition.y, width: notePosition.width, height: notePosition.height };
+    }
 
     const win = new BrowserWindow({
-        width: windowState.width,
-        height: windowState.height,
-        x: windowState.x,
-        y: windowState.y,
+        width: position.width,
+        height: position.height,
+        x: position.x,
+        y: position.y,
         frame: false,
         resizable: true,
         icon: 'fav.ico',
@@ -41,7 +74,10 @@ function createWindow(note = null) {
 
     win.on('close', async () => {
         saveWindowState(win);
-        // Note saving is now handled by the 'save-note' IPC event
+        if (note) {
+            const { x, y, width, height } = win.getBounds(); // Get current window position and size
+            saveNotePosition(note.id, x, y, width, height); // Save position and size for the note
+        }
     });
 
     return win;
@@ -49,8 +85,8 @@ function createWindow(note = null) {
 
 function createListWindow() {
     const listWin = new BrowserWindow({
-        width: 300,
-        height: 300,
+        width: 350,
+        height: 500,
         frame: false,
         resizable: true,
         webPreferences: {
@@ -93,8 +129,8 @@ function loadNotes() {
 
 function getWindowState() {
     let defaultState = {
-        width: 300,
-        height: 300,
+        width: 400,
+        height: 600,
         x: undefined,
         y: undefined
     };
