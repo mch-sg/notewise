@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notewise</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #121212;
+            color: #e0e0e0;
+            font-size: 13px;
+        }
+        .title-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #43462f; /* Updated to pastel yellow */
+            color: #e0e0e0;
+            padding: 5px 10px;
+            -webkit-app-region: drag;
+        }
+        .title-bar-buttons {
+            display: flex;
+            align-items: center;
+            -webkit-app-region: no-drag;
+        }
+        .title-bar button {
+            background: none;
+            border: none;
+            color: #121212 !important; /* Set icon color to black */
+            cursor: pointer;
+            padding: 5px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-app-region: no-drag;
+            transition: background-color 0.3s;
+            border-radius: 5px;
+        }
+        .title-bar .a {
+            margin-left: 5px;
+        }
+        .title-bar button:hover {
+            background-color: #363825;
+        }
+        #note-content {
+            flex: 1;
+            width: 100%;
+            border: none;
+            padding: 10px;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            background-color: #121212;
+            color: #e0e0e0;
+            resize: none;
+            font-size: 13px;
+            line-height: 1.5;
+            outline: none;
+            -webkit-text-fill-color: #e0e0e0;
+            opacity: 1;
+        }
+        #note-content::-webkit-scrollbar {
+            width: 4px;
+        }
+        #note-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #note-content::-webkit-scrollbar-thumb {
+            background-color: #1a1a1a;
+            border-radius: 2px;
+        }
+        ::selection {
+            background-color: #43462f; /* Updated highlight color */
+            color: #000000; /* Optional: change text color on highlight */
+        }
+    </style>
+</head>
+<body>
+    <div class="title-bar">
+        <button id="add-note"><i data-lucide="plus"></i></button>
+        <div class="title-bar-buttons a">
+            <button style="color: #121212;" id="list-notes"><i data-lucide="more-horizontal"></i></button>
+            <button style="color: #121212;" id="exit"><i data-lucide="x"></i></button>
+        </div>
+    </div>
+    <textarea id="note-content" spellcheck="false"></textarea>
+    <script src="renderer.js"></script>
+    <script>
+        lucide.createIcons({
+            attrs: {
+                width: '18px',
+                height: '18px',
+                stroke: '#e0e0e0'
+            }
+        });
+    </script>
+</body>
+</html>
